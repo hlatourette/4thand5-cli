@@ -22,6 +22,7 @@ install(
 
 install(
     PROGRAMS
+        ${SCR_DIR}/4thand5.sh
     TYPE BIN
     COMPONENT ${COMPONENT_NAME}
 )
