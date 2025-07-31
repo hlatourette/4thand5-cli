@@ -1,14 +1,15 @@
 find_package(Catch2 REQUIRED)
 
-add_executable(templateapp.u.t)
+add_executable(4thand5.u.t)
 
-target_link_libraries(templateapp.u.t
+target_link_libraries(4thand5.u.t
     PRIVATE
         Catch2::Catch2WithMain
-        templateapplib
+        util
 )
 
-target_sources(templateapp.u.t
+target_sources(4thand5.u.t
     PRIVATE
-        templateapp_util.t.cpp
+        util.t.cpp
 )
+

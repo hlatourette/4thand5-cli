@@ -1,20 +1,21 @@
-set(EXECUTABLE_NAME templateapp)
+set(EXECUTABLE_NAME 4thand5)
 
-add_subdirectory(templateapp_util)
+add_subdirectory(util)
 
 add_executable(${EXECUTABLE_NAME})
 
 target_link_libraries(${EXECUTABLE_NAME}
     PRIVATE
-        templateapplib
+        util
 )
 
 target_sources(${EXECUTABLE_NAME}
     PRIVATE
-        templateapp.m.cpp
+        4thand5.m.cpp
 )
 
 target_include_directories(${EXECUTABLE_NAME}
     PRIVATE
         .
 )
+

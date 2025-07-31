@@ -18,3 +18,4 @@ package:
 
 test:
 	cd ${BUILD_DIR} && ctest --verbose
+

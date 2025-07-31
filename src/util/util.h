@@ -1,9 +1,9 @@
-#ifndef TEMPLATEAPP_UTIL_H
-#define TEMPLATEAPP_UTIL_H
+#ifndef FOURTHANDFIVE_UTIL_H
+#define FOURTHANDFIVE_UTIL_H
 
 #include <string>
 
-namespace templateapp {
+namespace fourthandfive {
     /**
      * Answer the ultimate question
      *
@@ -11,6 +11,7 @@ namespace templateapp {
      * @return the answer to the ultimate question
      */
     int meaningOfLifeTheUniverseAndEverything(const std::string& question);
-} // close namespace templateapp
+} // close namespace fourthandfive
 
-#endif /* TEMPLATEAPP_UTIL_H */
+#endif /* FOURTHANDFIVE_UTIL_H */
+
