@@ -1,5 +1,5 @@
-# template-app-cpp
-Template C/C++ application
+# 4thand5-cli
+College Football Game Feed
 
 ## Build
 ```
@@ -10,17 +10,18 @@ docker build --target=build-export --output type=local,dest=./output .
 
 ### Unit
 ```
-docker build --target=build -t templateapp .
+docker build --target=build -t 4thand5-cli .
 ```
 
 ### Integration
 ```
-docker build --target=test -t templateapp .
+docker build --target=test -t 4thand5-cli .
 docker run -it --rm templateapp
 ```
 
 ## Run
 ```
-docker build --target=run -t templateapp .
-docker run -it --rm templateapp
+docker build --target=run -t 4thand5-cli .
+docker run -it --rm 4thand5-cli
 ```
+
