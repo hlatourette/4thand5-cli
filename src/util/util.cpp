@@ -1,9 +1,10 @@
-#include <templateapp_util.h>
+#include "util.h"
 
-namespace templateapp {
+namespace fourthandfive {
 
 int meaningOfLifeTheUniverseAndEverything(const std::string& question) {
     return 42;
 }
 
-} // close namespace templateapp
+} // close namespace fourthandfive
+

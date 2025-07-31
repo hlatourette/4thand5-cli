@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include <templateapp_util.h>
+#include "util.h"
 
-using namespace templateapp;
+using namespace fourthandfive;
 
 int main()
 {
@@ -13,3 +13,4 @@ int main()
     std::cout << meaningOfLifeTheUniverseAndEverything(question) << std::endl;
     return 0;
 }
+

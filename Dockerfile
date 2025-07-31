@@ -5,23 +5,24 @@ RUN apt-get update && apt-get install -y \
     apt-get autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
-COPY . /usr/local/src/templateapp
-WORKDIR /usr/local/src/templateapp
+COPY . /usr/local/src/4thand5-cli
+WORKDIR /usr/local/src/4thand5-cli
 RUN make build && \
     make test && \
     make package
 
 FROM scratch AS build-export
-COPY --from=build /usr/local/src/templateapp/build/templateapp-Linux.deb /
+COPY --from=build /usr/local/src/4thand5-cli/build/4thand5-cli-Linux.deb /
 WORKDIR /
 
 FROM ubuntu:latest AS test
-COPY --from=build /usr/local/src/templateapp/build/tests/integration/templateapp.i.t /usr/local/bin
+COPY --from=build /usr/local/src/4thand5-cli/build/tests/integration/4thand5.i.t /usr/local/bin
 WORKDIR /usr/local/bin
-ENTRYPOINT [ "/usr/local/bin/templateapp.i.t" ]
+ENTRYPOINT [ "/usr/local/bin/4thand5.i.t" ]
 
 FROM ubuntu:latest AS run
-COPY --from=build /usr/local/src/templateapp/build/templateapp-Linux.deb /usr/local/bin
+COPY --from=build /usr/local/src/4thand5-cli/build/4thand5-cli-Linux.deb /usr/local/bin
 WORKDIR /usr/local/bin
-RUN dpkg -i templateapp-Linux.deb
-ENTRYPOINT [ "/usr/bin/templateapp.sh" ]
+RUN dpkg -i 4thand5-cli-Linux.deb
+ENTRYPOINT [ "/usr/bin/4thand5" ]
+

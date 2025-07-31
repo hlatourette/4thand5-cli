@@ -1,4 +1,4 @@
-set(LIBRARY_NAME templateapplib)
+set(LIBRARY_NAME util)
 
 add_library(${LIBRARY_NAME} STATIC)
 
@@ -10,12 +10,12 @@ target_link_libraries(${LIBRARY_NAME}
 
 target_sources(${LIBRARY_NAME}
     PRIVATE
-        templateapp_util.cpp
+        util.cpp
     INTERFACE
     PUBLIC
         FILE_SET HEADERS
             FILES
-                templateapp_util.h
+                util.h
 )
 
 target_include_directories(${LIBRARY_NAME}
@@ -24,3 +24,4 @@ target_include_directories(${LIBRARY_NAME}
     PRIVATE
         .
 )
+
