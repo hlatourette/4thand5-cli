@@ -1,3 +1,4 @@
+#include <csignal>
 #include <iostream>
 #include <ncurses.h>
 #include <string>
@@ -6,13 +7,36 @@
 
 using namespace fourthandfive;
 
-int main()
+void signalHandler(int signum)
 {
-    initscr(); // Start curses mode
-    printw(std::to_string(getGameData(0)).c_str());
-    refresh(); // Print it to the real screen
-    getch();   // Wait for user input
-    endwin();  // End curses mode
+    (void)endwin();
+    (void)exit(signum);
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc < 1) {
+        std::cerr << "Usage: " << argv[0] << std::endl;
+        return 1;
+    }
+
+    (void)std::signal(SIGINT, signalHandler);
+
+    // Initialize data
+    int gameData = getGameData(0);
+
+    // Initialize rendering [ncurses]
+    (void)initscr();
+    (void)nonl();
+
+    // Input + Render
+    (void)printw(std::to_string(gameData).c_str());
+    refresh();
+    getch();
+
+    // Cleanup
+    (void)endwin();
+
     return 0;
 }
 
