@@ -31,8 +31,9 @@ int main(int argc, char *argv[])
 
     // Input + Render
     (void)printw(std::to_string(gameData).c_str());
-    refresh();
-    getch();
+    (void)refresh();
+    int ch = getch();
+    (void)printw(std::to_string(ch).c_str());
 
     // Cleanup
     (void)endwin();
