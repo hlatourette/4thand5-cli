@@ -1,13 +1,13 @@
 set(EXECUTABLE_NAME 4thand5)
 
-add_subdirectory(util)
+add_subdirectory(feeds)
 
 add_executable(${EXECUTABLE_NAME})
 
 target_link_libraries(${EXECUTABLE_NAME}
     PRIVATE
         ncurses
-        util # local
+        feeds # local
 )
 
 target_sources(${EXECUTABLE_NAME}
