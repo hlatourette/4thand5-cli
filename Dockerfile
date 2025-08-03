@@ -1,7 +1,9 @@
 FROM gcc:12.3 AS build
 RUN apt-get update && apt-get install -y \
     catch2 \
-    cmake && \
+    cmake \ 
+    libncurses5-dev \
+    libncursesw5-dev && \
     apt-get autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
@@ -21,6 +23,11 @@ WORKDIR /usr/local/bin
 ENTRYPOINT [ "/usr/local/bin/4thand5.i.t" ]
 
 FROM ubuntu:latest AS run
+RUN apt-get update && apt-get install -y \
+    libncurses6 && \
+    apt-get autoremove && \
+    apt-get -y clean && \
+    rm -rf /car/lib/apt/lists/*
 COPY --from=build /usr/local/src/4thand5-cli/build/4thand5-cli-Linux.deb /usr/local/bin
 WORKDIR /usr/local/bin
 RUN dpkg -i 4thand5-cli-Linux.deb

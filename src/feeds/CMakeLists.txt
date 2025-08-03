@@ -1,4 +1,4 @@
-set(LIBRARY_NAME util)
+set(LIBRARY_NAME feeds)
 
 add_library(${LIBRARY_NAME} STATIC)
 
@@ -10,12 +10,12 @@ target_link_libraries(${LIBRARY_NAME}
 
 target_sources(${LIBRARY_NAME}
     PRIVATE
-        util.cpp
+        feed.cpp
     INTERFACE
     PUBLIC
         FILE_SET HEADERS
             FILES
-                util.h
+                feed.h
 )
 
 target_include_directories(${LIBRARY_NAME}
