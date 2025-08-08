@@ -1,5 +1,5 @@
-#ifndef FOURTHANDFIVE_GAMESTATE_H
-#define FOURTHANDFIVE_GAMESTATE_H
+#ifndef FOURTHANDFIVE_GAME_STATE_H
+#define FOURTHANDFIVE_GAME_STATE_H
 
 #include <chrono>
 
@@ -21,5 +21,5 @@ struct GameState {
 
 } // close namespace fourthandfive
 
-#endif /* FOURTHANDFIVE_GAMESTATE_H */
+#endif /* FOURTHANDFIVE_GAME_STATE_H */
 
