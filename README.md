@@ -16,7 +16,7 @@ docker build --target=build -t 4thand5-cli .
 ### Integration
 ```
 docker build --target=test -t 4thand5-cli .
-docker run -it --rm templateapp
+docker run -it --rm 4thand5-cli
 ```
 
 ## Run
