@@ -1,0 +1,25 @@
+#ifndef FOURTHANDFIVE_GAMESTATE_H
+#define FOURTHANDFIVE_GAMESTATE_H
+
+#include <chrono>
+
+namespace fourthandfive {
+
+struct GameState {
+    unsigned int homeTeamId{0};
+    unsigned int awayTeamId{0};
+    unsigned int homeTeamScore{0};
+    unsigned int awayTeamScore{0};
+    unsigned int homeTeamTO{3};
+    unsigned int awayTeamTO{3};
+    unsigned int down{0};
+    unsigned int distance{10};
+    unsigned int yardLine{0};
+    unsigned int period{0};
+    std::chrono::seconds clock{900};
+};
+
+} // close namespace fourthandfive
+
+#endif /* FOURTHANDFIVE_GAMESTATE_H */
+
