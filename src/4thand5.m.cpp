@@ -5,7 +5,7 @@
 #include <string>
 
 #include "feed.h"
-#include "game_state.h"
+#include "game_data.h"
 
 using namespace fourthandfive;
 
@@ -25,13 +25,14 @@ int main(int argc, char *argv[])
     (void)std::signal(SIGINT, signalHandler);
 
     // Initialize data
-    GameState gameState {
+    fourthandfive::GameState gameState {
         .homeTeamId = 0,
         .awayTeamId = 0,
         .homeTeamScore = 0,
         .awayTeamScore = 0,
         .homeTeamTO = 3,
         .awayTeamTO = 3,
+        .possession = 0,
         .down = 0,
         .distance = 10,
         .yardLine = 0,
