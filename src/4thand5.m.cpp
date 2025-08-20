@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
         // Reset cursor to input line and await command
         wmove(stdscr, minY + 2, minX);
-        getnstr(cmd, cmdLimit);
+        wgetnstr(stdscr, cmd, cmdLimit);
 
         // Render output
         (void)wrefresh(stdscr);
