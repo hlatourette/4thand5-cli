@@ -1,4 +1,4 @@
-set(LIBRARY_NAME game)
+set(LIBRARY_NAME game_data)
 
 add_library(${LIBRARY_NAME} STATIC)
 
@@ -10,12 +10,12 @@ target_link_libraries(${LIBRARY_NAME}
 
 target_sources(${LIBRARY_NAME}
     PRIVATE
-        game_state.cpp
+        game_data.cpp
     INTERFACE
     PUBLIC
         FILE_SET HEADERS
             FILES
-                game_state.h
+                game_data.h
 )
 
 target_include_directories(${LIBRARY_NAME}
