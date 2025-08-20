@@ -45,21 +45,35 @@ int main(int argc, char *argv[])
     (void)initscr();
     (void)nonl();
 
-    // Input + Render
-    (void)printw(("Home " + std::to_string(gameState.homeTeamId)).c_str());
-    (void)mvprintw(1, 0, ("Away " + std::to_string(gameState.awayTeamId)).c_str());
-    (void)mvprintw(2, 0, ("Home Score " + std::to_string(gameState.homeTeamScore)).c_str());
-    (void)mvprintw(3, 0, ("Away Score " + std::to_string(gameState.awayTeamScore)).c_str());
-    (void)mvprintw(4, 0, ("Home TO " + std::to_string(gameState.homeTeamTO)).c_str());
-    (void)mvprintw(5, 0, ("Away TO " + std::to_string(gameState.awayTeamTO)).c_str());
-    (void)mvprintw(6, 0, ("Down " + std::to_string(gameState.down)).c_str());
-    (void)mvprintw(7, 0, ("Distance " + std::to_string(gameState.distance)).c_str());
-    (void)mvprintw(8, 0, ("Yard Line " + std::to_string(gameState.yardLine)).c_str());
-    (void)mvprintw(9, 0, ("Period " + std::to_string(gameState.period)).c_str());
-    (void)mvprintw(10, 0, ("Clock " + std::to_string(gameState.clock.count())).c_str());
-    (void)refresh();
-    int ch = getch();
-    (void)printw(std::to_string(ch).c_str());
+    // Core loop [input processing + output rendering]
+    const int cmdLimit = 5;
+    char cmd[cmdLimit] = {0};
+    while (true) {
+        // Check window sizing
+        int minX = 0, minY = 0, maxX = 0, maxY = 0;
+        (void)getbegyx(stdscr, minY, minX);
+        (void)getmaxyx(stdscr, maxY, maxX);
+        // TODO: check window size meets minimum for rendering
+
+        // Perform command
+        // TODO: do logic updates
+
+        // Buffer rendering
+        (void)wmove(stdscr, minY, minX);
+        (void)wclrtoeol(stdscr);
+        (void)wprintw(stdscr, cmd);
+        (void)wmove(stdscr, minY + 1, minX);
+        (void)wprintw(stdscr, (std::to_string(minX) + " " + std::to_string(minY) + " " + std::to_string(maxX) + " " + std::to_string(maxY)).c_str());
+        (void)wmove(stdscr, minY + 2, minX);
+        (void)wclrtoeol(stdscr);
+
+        // Reset cursor to input line and await command
+        wmove(stdscr, minY + 2, minX);
+        getnstr(cmd, cmdLimit);
+
+        // Render output
+        (void)wrefresh(stdscr);
+    }
 
     // Cleanup
     (void)endwin();
