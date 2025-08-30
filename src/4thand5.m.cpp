@@ -48,31 +48,29 @@ int main(int argc, char *argv[])
     // Core loop [input processing + output rendering]
     const int cmdLimit = 5;
     char cmd[cmdLimit] = {0};
+    int minX = 0, minY = 0, maxX = 0, maxY = 0;
     while (true) {
         // Check window sizing
-        int minX = 0, minY = 0, maxX = 0, maxY = 0;
         (void)getbegyx(stdscr, minY, minX);
         (void)getmaxyx(stdscr, maxY, maxX);
-        // TODO: check window size meets minimum for rendering
+        // TODO: window size minimums + resizing
 
         // Perform command
-        // TODO: do logic updates
+        // TODO: logic updates
 
         // Buffer rendering
+        (void)wmove(stdscr, maxY - 1, minX);
+        (void)wclrtoeol(stdscr);
         (void)wmove(stdscr, minY, minX);
         (void)wclrtoeol(stdscr);
         (void)wprintw(stdscr, cmd);
-        (void)wmove(stdscr, minY + 1, minX);
-        (void)wprintw(stdscr, (std::to_string(minX) + " " + std::to_string(minY) + " " + std::to_string(maxX) + " " + std::to_string(maxY)).c_str());
-        (void)wmove(stdscr, minY + 2, minX);
-        (void)wclrtoeol(stdscr);
-
-        // Reset cursor to input line and await command
-        wmove(stdscr, minY + 2, minX);
-        wgetnstr(stdscr, cmd, cmdLimit);
 
         // Render output
         (void)wrefresh(stdscr);
+
+        // Reset cursor to input await command
+        wmove(stdscr, maxY - 1, minX);
+        wgetnstr(stdscr, cmd, cmdLimit);
     }
 
     // Cleanup
