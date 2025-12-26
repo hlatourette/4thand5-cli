@@ -54,9 +54,8 @@ int main(int argc, char *argv[])
     (void)nonl();
 
     // Core loop [input processing + output rendering]
-    const int cmdLimit = 5;
-    char cmd[cmdLimit + 1] = {0};
-    int minX = 0, minY = 0, maxX = 0, maxY = 0;
+    std::array<char, 5uz> cmd{};
+    unsigned int minX = 0, minY = 0, maxX = 0, maxY = 0;
     while (true) {
         // Check window sizing
         (void)getbegyx(stdscr, minY, minX);
@@ -77,7 +76,7 @@ int main(int argc, char *argv[])
 
         (void)wmove(stdscr, fieldView.size(), minX);
         (void)wclrtoeol(stdscr);
-        (void)waddnstr(stdscr, cmd, cmdLimit);
+        (void)waddnstr(stdscr, cmd.data(), cmd.size());
         (void)wmove(stdscr, maxY - 1, minX);
         (void)wclrtoeol(stdscr);
 
@@ -86,7 +85,7 @@ int main(int argc, char *argv[])
 
         // Reset cursor to input await command
         wmove(stdscr, maxY - 1, minX);
-        wgetnstr(stdscr, cmd, cmdLimit);
+        wgetnstr(stdscr, cmd.data(), cmd.size());
     }
 
     // Cleanup
