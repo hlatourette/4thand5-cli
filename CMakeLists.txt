@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.25.1)
 
 project(4thand5-cli VERSION 0.0.1 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(COMPONENT_NAME 4thand5-cli)
+set(CFG_DIR ${PROJECT_SOURCE_DIR}/config)
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(SCR_DIR ${PROJECT_SOURCE_DIR}/scripts)
 set(TST_DIR ${PROJECT_SOURCE_DIR}/tests)
@@ -29,6 +30,7 @@ install(
 
 install(
     FILES
+        ${CFG_DIR}/4thand5
     TYPE DATA
     COMPONENT ${COMPONENT_NAME}
 )

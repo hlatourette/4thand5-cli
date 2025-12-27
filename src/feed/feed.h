@@ -1,7 +1,9 @@
 #ifndef FOURTHANDFIVE_FEED_H
 #define FOURTHANDFIVE_FEED_H
 
-#include <string>
+#include <vector>
+
+#include "game_data.h"
 
 namespace fourthandfive {
     /**
@@ -10,9 +12,9 @@ namespace fourthandfive {
      * Retrieve game data from provider feed. 
      *
      * @param gameId Game ID
-     * @return Game data
+     * @return Game log
      */
-    int getGameData(const int gameId);
+    std::vector<GameData> getGameData(const int gameId);
 } // close namespace fourthandfive
 
 #endif /* FOURTHANDFIVE_FEED_H */

@@ -1,6 +1,10 @@
-#include <chrono>
+#include <algorithm>
+#include <array>
 #include <csignal>
+#include <cstddef>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <ncurses.h>
 #include <string>
 #include <vector>
@@ -25,42 +29,32 @@ int main(int argc, char *argv[])
 
     (void)std::signal(SIGINT, signalHandler);
 
+    // Initialize configuration
+    std::array<char, 959uz> configuration{};
+    std::ifstream configFile("/usr/share/4thand5");
+    if (configFile.is_open()) {
+        (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(configuration));
+    }
+
+    configFile.close();
+
     // Initialize data
-    fourthandfive::GameState gameState {
-        .homeTeamId = 0,
-        .awayTeamId = 0,
-        .homeTeamScore = 0,
-        .awayTeamScore = 0,
-        .homeTeamTO = 3,
-        .awayTeamTO = 3,
-        .possession = 0,
-        .down = 0,
-        .distance = 10,
-        .yardLine = 0,
-        .period = 0,
-        .clock = std::chrono::seconds(900)
-    };
-    gameState.homeTeamId = getGameData(0);
+    std::vector<fourthandfive::GameData> gameDataLog{};
+    gameDataLog = getGameData(0);
 
     // Initialize data views
-    std::vector<std::vector<char>> fieldView = {
-        {'+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+'},
-        {'|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', '1', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '2', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '3', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '4', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '5', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '4', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '3', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '2', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', '1', '|', '0', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|'},
-        {'|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|'},
-        {'|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|'},
-        {'|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|'},
-        {'|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|'},
-        {'+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+'}
-    };
+    const std::size_t fieldViewRowSize = 137uz;
+    const std::size_t fieldViewSize = fieldViewRowSize * 7uz;
+    std::array<char, fieldViewSize> fieldView{};
+    (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView));
 
     // Initialize rendering [ncurses]
     (void)initscr();
     (void)nonl();
 
     // Core loop [input processing + output rendering]
-    const int cmdLimit = 5;
-    char cmd[cmdLimit + 1] = {0};
-    int minX = 0, minY = 0, maxX = 0, maxY = 0;
+    std::array<char, 5uz> cmd{};
+    unsigned int minX = 0, minY = 0, maxX = 0, maxY = 0;
     while (true) {
         // Check window sizing
         (void)getbegyx(stdscr, minY, minX);
@@ -68,20 +62,17 @@ int main(int argc, char *argv[])
         // TODO: window size minimums + resizing
 
         // Perform command
-        // TODO: logic updates
+        // TODO: logic updates: cmd
 
         // Buffer rendering
         (void)wmove(stdscr, minY, minX);
-        for (int fieldRow = 0; fieldRow < fieldView.size(); fieldRow++) {
-            for (int fieldCol = 0; fieldCol < fieldView[fieldRow].size(); fieldCol++) {
-                (void)wmove(stdscr, fieldRow, fieldCol);
-                (void)waddch(stdscr, fieldView[fieldRow][fieldCol]);
+        for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / fieldViewRowSize; fieldViewRow++) {
+            for (std::size_t fieldViewCol = 0; fieldViewCol < fieldViewRowSize; fieldViewCol++) {
+                (void)wmove(stdscr, fieldViewRow, fieldViewCol);
+                (void)waddch(stdscr, fieldView[(fieldViewRowSize * fieldViewRow) + fieldViewCol]);
             }
         }
 
-        (void)wmove(stdscr, fieldView.size(), minX);
-        (void)wclrtoeol(stdscr);
-        (void)waddnstr(stdscr, cmd, cmdLimit);
         (void)wmove(stdscr, maxY - 1, minX);
         (void)wclrtoeol(stdscr);
 
@@ -89,8 +80,8 @@ int main(int argc, char *argv[])
         (void)wrefresh(stdscr);
 
         // Reset cursor to input await command
-        wmove(stdscr, maxY - 1, minX);
-        wgetnstr(stdscr, cmd, cmdLimit);
+        (void)wmove(stdscr, maxY - 1, minX);
+        (void)wgetnstr(stdscr, cmd.data(), cmd.size());
     }
 
     // Cleanup
