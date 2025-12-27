@@ -1,8 +1,11 @@
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <csignal>
 #include <cstddef>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <ncurses.h>
 #include <string>
 
@@ -49,6 +52,14 @@ int main(int argc, char *argv[])
     std::array<char, fieldViewSize> fieldView{};
     fieldView.fill(42); // Default fill with '*'
 
+    // Initialize configuration
+    std::ifstream configFile("/usr/share/4thand5");
+    if (configFile.is_open()) {
+        (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(fieldView));
+    }
+
+    configFile.close();
+
     // Initialize rendering [ncurses]
     (void)initscr();
     (void)nonl();
@@ -63,20 +74,17 @@ int main(int argc, char *argv[])
         // TODO: window size minimums + resizing
 
         // Perform command
-        // TODO: logic updates
+        // TODO: logic updates: cmd
 
         // Buffer rendering
         (void)wmove(stdscr, minY, minX);
         for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / fieldViewRowSize; fieldViewRow++) {
             for (std::size_t fieldViewCol = 0; fieldViewCol < fieldViewRowSize; fieldViewCol++) {
                 (void)wmove(stdscr, fieldViewRow, fieldViewCol);
-                (void)waddch(stdscr, fieldView[fieldViewRow + fieldViewCol]);
+                (void)waddch(stdscr, fieldView[(fieldViewRowSize * fieldViewRow) + fieldViewCol]);
             }
         }
 
-        (void)wmove(stdscr, fieldView.size(), minX);
-        (void)wclrtoeol(stdscr);
-        (void)waddnstr(stdscr, cmd.data(), cmd.size());
         (void)wmove(stdscr, maxY - 1, minX);
         (void)wclrtoeol(stdscr);
 
@@ -84,8 +92,8 @@ int main(int argc, char *argv[])
         (void)wrefresh(stdscr);
 
         // Reset cursor to input await command
-        wmove(stdscr, maxY - 1, minX);
-        wgetnstr(stdscr, cmd.data(), cmd.size());
+        (void)wmove(stdscr, maxY - 1, minX);
+        (void)wgetnstr(stdscr, cmd.data(), cmd.size());
     }
 
     // Cleanup

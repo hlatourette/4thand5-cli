@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(COMPONENT_NAME 4thand5-cli)
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(SCR_DIR ${PROJECT_SOURCE_DIR}/scripts)
+set(CFG_DIR ${PROJECT_SOURCE_DIR}/config)
 set(TST_DIR ${PROJECT_SOURCE_DIR}/tests)
 
 enable_testing()
@@ -29,6 +30,7 @@ install(
 
 install(
     FILES
+        ${CFG_DIR}/4thand5
     TYPE DATA
     COMPONENT ${COMPONENT_NAME}
 )
