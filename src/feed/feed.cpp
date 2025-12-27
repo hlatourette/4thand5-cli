@@ -4,7 +4,7 @@
 
 namespace fourthandfive {
 
-std::vector<GameState> getGameData(const int gameId) {
+std::vector<GameData> getGameData(const int gameId) {
     return {
         {
             .homeTeamId = 0,

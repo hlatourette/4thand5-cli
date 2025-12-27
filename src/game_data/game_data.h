@@ -5,7 +5,7 @@
 
 namespace fourthandfive {
 
-struct GameState {
+struct GameData {
     unsigned int homeTeamId{0};
     unsigned int awayTeamId{0};
     unsigned int homeTeamScore{0};

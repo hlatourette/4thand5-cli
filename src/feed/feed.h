@@ -14,7 +14,7 @@ namespace fourthandfive {
      * @param gameId Game ID
      * @return Game log
      */
-    std::vector<GameState> getGameData(const int gameId);
+    std::vector<GameData> getGameData(const int gameId);
 } // close namespace fourthandfive
 
 #endif /* FOURTHANDFIVE_FEED_H */

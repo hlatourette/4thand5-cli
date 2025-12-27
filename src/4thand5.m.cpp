@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     configFile.close();
 
     // Initialize data
-    std::vector<fourthandfive::GameState> gameLog{};
-    // gameLog = getGameData(0);
+    std::vector<fourthandfive::GameData> gameDataLog{};
+    gameDataLog = getGameData(0);
 
     // Initialize data views
     const std::size_t fieldViewRowSize = 137uz;
