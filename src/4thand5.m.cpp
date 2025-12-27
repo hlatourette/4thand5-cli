@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <csignal>
 #include <cstddef>
 #include <fstream>
@@ -8,6 +7,7 @@
 #include <iterator>
 #include <ncurses.h>
 #include <string>
+#include <vector>
 
 #include "feed.h"
 #include "game_data.h"
@@ -29,36 +29,24 @@ int main(int argc, char *argv[])
 
     (void)std::signal(SIGINT, signalHandler);
 
+    // Initialize configuration
+    std::array<char, 959uz> configuration{};
+    std::ifstream configFile("/usr/share/4thand5");
+    if (configFile.is_open()) {
+        (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(configuration));
+    }
+
+    configFile.close();
+
     // Initialize data
-    fourthandfive::GameState gameState {
-        .homeTeamId = 0,
-        .awayTeamId = 0,
-        .homeTeamScore = 0,
-        .awayTeamScore = 0,
-        .homeTeamTO = 3,
-        .awayTeamTO = 3,
-        .possession = 0,
-        .down = 0,
-        .distance = 10,
-        .yardLine = 0,
-        .period = 0,
-        .clock = std::chrono::seconds(900)
-    };
-    gameState.homeTeamId = getGameData(0);
+    std::vector<fourthandfive::GameState> gameLog{};
+    // gameLog = getGameData(0);
 
     // Initialize data views
     const std::size_t fieldViewRowSize = 137uz;
     const std::size_t fieldViewSize = fieldViewRowSize * 7uz;
     std::array<char, fieldViewSize> fieldView{};
-    fieldView.fill(42); // Default fill with '*'
-
-    // Initialize configuration
-    std::ifstream configFile("/usr/share/4thand5");
-    if (configFile.is_open()) {
-        (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(fieldView));
-    }
-
-    configFile.close();
+    (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView));
 
     // Initialize rendering [ncurses]
     (void)initscr();

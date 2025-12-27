@@ -1,6 +1,6 @@
 set(EXECUTABLE_NAME 4thand5)
 
-add_subdirectory(feeds)
+add_subdirectory(feed)
 add_subdirectory(game_data)
 
 add_executable(${EXECUTABLE_NAME})
@@ -8,7 +8,7 @@ add_executable(${EXECUTABLE_NAME})
 target_link_libraries(${EXECUTABLE_NAME}
     PRIVATE
         ncurses
-        feeds # local
+        feed # local
         game_data  # local
 )
 
