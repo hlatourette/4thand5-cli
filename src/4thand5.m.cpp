@@ -11,6 +11,7 @@
 
 #include "feed.h"
 #include "game_data.h"
+#include "view.h"
 
 using namespace fourthandfive;
 
@@ -30,7 +31,8 @@ int main(int argc, char *argv[])
     (void)std::signal(SIGINT, signalHandler);
 
     // Initialize configuration
-    std::array<char, 959uz> configuration{};
+    std::array<char, k_FIELD_SIZE> configuration{};
+    configuration.fill(0x20);
     std::ifstream configFile("/usr/share/4thand5");
     if (configFile.is_open()) {
         (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(configuration));
@@ -43,9 +45,7 @@ int main(int argc, char *argv[])
     gameDataLog = getGameData(0);
 
     // Initialize data views
-    const std::size_t fieldViewRowSize = 137uz;
-    const std::size_t fieldViewSize = fieldViewRowSize * 7uz;
-    std::array<char, fieldViewSize> fieldView{};
+    std::array<char, k_FIELD_SIZE> fieldView{};
     (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView));
 
     // Initialize rendering [ncurses]
@@ -66,10 +66,10 @@ int main(int argc, char *argv[])
 
         // Buffer rendering
         (void)wmove(stdscr, minY, minX);
-        for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / fieldViewRowSize; fieldViewRow++) {
-            for (std::size_t fieldViewCol = 0; fieldViewCol < fieldViewRowSize; fieldViewCol++) {
+        for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / k_FIELD_ROW_SIZE; fieldViewRow++) {
+            for (std::size_t fieldViewCol = 0; fieldViewCol < k_FIELD_ROW_SIZE; fieldViewCol++) {
                 (void)wmove(stdscr, fieldViewRow, fieldViewCol);
-                (void)waddch(stdscr, fieldView[(fieldViewRowSize * fieldViewRow) + fieldViewCol]);
+                (void)waddch(stdscr, fieldView[(k_FIELD_ROW_SIZE * fieldViewRow) + fieldViewCol]);
             }
         }
 
