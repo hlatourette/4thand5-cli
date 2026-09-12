@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     (void)std::signal(SIGINT, signalHandler);
 
     // Initialize configuration
-    std::array<char, k_FIELD_SIZE> configuration{};
+    std::array<char, k_FIELD_VIEW_SIZE> configuration{};
     configuration.fill(0x20);
     std::ifstream configFile("/usr/share/4thand5");
     if (configFile.is_open()) {
@@ -42,35 +42,50 @@ int main(int argc, char *argv[])
 
     // Initialize data
     std::vector<fourthandfive::GameData> gameDataLog{};
+    std::array<char, 5uz> cmd{};
     gameDataLog = getGameData(0);
 
     // Initialize data views
-    std::array<char, k_FIELD_SIZE> fieldView{};
+    std::array<char, k_FIELD_VIEW_SIZE> fieldView{};
+    std::array<char, k_INPUT_VIEW_SIZE> inputView{};
     (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView));
 
     // Initialize rendering [ncurses]
     (void)initscr();
     (void)nonl();
 
-    // Core loop [input processing + output rendering]
-    std::array<char, 5uz> cmd{};
+    // Core loop [input processing + data updates + output buffering + output rendering]
     unsigned int minX = 0, minY = 0, maxX = 0, maxY = 0;
     while (true) {
+        // Perform cmd + data updates
+        // TODO: logic + data updates: cmd
+
+        // Update view buffer
+        // TODO: view buffer updates
+
         // Check window sizing
         (void)getbegyx(stdscr, minY, minX);
         (void)getmaxyx(stdscr, maxY, maxX);
-        // TODO: window size minimums + resizing
-
-        // Perform command
-        // TODO: logic updates: cmd
 
         // Buffer rendering
-        (void)wmove(stdscr, minY, minX);
-        for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / k_FIELD_ROW_SIZE; fieldViewRow++) {
-            for (std::size_t fieldViewCol = 0; fieldViewCol < k_FIELD_ROW_SIZE; fieldViewCol++) {
-                (void)wmove(stdscr, fieldViewRow, fieldViewCol);
-                (void)waddch(stdscr, fieldView[(k_FIELD_ROW_SIZE * fieldViewRow) + fieldViewCol]);
+        const bool fits =
+            (maxY >= [](auto... args) { return (... + args); }(
+                k_FIELD_VIEW_MIN_ROWS,
+                k_INPUT_VIEW_MIN_ROWS))
+            && 
+            (maxX >= [](auto... args) { return (... + args); }(
+                k_FIELD_VIEW_MIN_COLUMNS,
+                k_INPUT_VIEW_MIN_COLUMNS));
+        if (fits) {
+            (void)wmove(stdscr, minY, minX);
+            for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / k_FIELD_VIEW_ROW_SIZE; fieldViewRow++) {
+                for (std::size_t fieldViewCol = 0; fieldViewCol < k_FIELD_VIEW_ROW_SIZE; fieldViewCol++) {
+                    (void)wmove(stdscr, fieldViewRow, fieldViewCol);
+                    (void)waddch(stdscr, fieldView[(k_FIELD_VIEW_ROW_SIZE * fieldViewRow) + fieldViewCol]);
+                }
             }
+        } else {
+            (void)werase(stdscr);
         }
 
         (void)wmove(stdscr, maxY - 1, minX);
