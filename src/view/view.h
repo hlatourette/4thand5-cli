@@ -19,5 +19,5 @@ inline constexpr std::size_t k_INPUT_VIEW_MIN_COLUMNS = k_INPUT_VIEW_ROW_SIZE;
 
 } // close namespace fourthandfive
 
-#endif /*FOURTHANDFIVE_FEED_H */
+#endif /*FOURTHANDFIVE_VIEW_H */
 
