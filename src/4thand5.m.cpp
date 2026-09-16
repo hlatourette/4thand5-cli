@@ -69,13 +69,8 @@ int main(int argc, char *argv[])
 
         // Buffer rendering
         const bool fits =
-            (maxY >= [](auto... args) { return (... + args); }(
-                k_FIELD_VIEW_MIN_ROWS,
-                k_INPUT_VIEW_MIN_ROWS))
-            && 
-            (maxX >= [](auto... args) { return (... + args); }(
-                k_FIELD_VIEW_MIN_COLUMNS,
-                k_INPUT_VIEW_MIN_COLUMNS));
+            (maxY >= [](auto... args) { return (... + args); }(k_FIELD_VIEW_MIN_ROWS, k_INPUT_VIEW_MIN_ROWS)) &&
+            (maxX >= std::max({k_FIELD_VIEW_MIN_COLUMNS, k_INPUT_VIEW_MIN_COLUMNS}));
         if (fits) {
             // TODO: iterate over view objects
             (void)wmove(stdscr, minY, minX);
