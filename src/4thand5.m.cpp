@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         // TODO: logic + data updates: cmd
 
         // Update view buffer
-        // TODO: view buffer updates
+        // TODO: view updates
 
         // Check window sizing
         (void)getbegyx(stdscr, minY, minX);
@@ -77,11 +77,12 @@ int main(int argc, char *argv[])
                 k_FIELD_VIEW_MIN_COLUMNS,
                 k_INPUT_VIEW_MIN_COLUMNS));
         if (fits) {
+            // TODO: iterate over view objects
             (void)wmove(stdscr, minY, minX);
-            for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / k_FIELD_VIEW_ROW_SIZE; fieldViewRow++) {
-                for (std::size_t fieldViewCol = 0; fieldViewCol < k_FIELD_VIEW_ROW_SIZE; fieldViewCol++) {
-                    (void)wmove(stdscr, fieldViewRow, fieldViewCol);
-                    (void)waddch(stdscr, fieldView[(k_FIELD_VIEW_ROW_SIZE * fieldViewRow) + fieldViewCol]);
+            for (std::size_t viewRow = 0; viewRow < fieldView.size() / k_FIELD_VIEW_ROW_SIZE; viewRow++) {
+                for (std::size_t viewCol = 0; viewCol < k_FIELD_VIEW_ROW_SIZE; viewCol++) {
+                    (void)wmove(stdscr, viewRow, viewCol);
+                    (void)waddch(stdscr, fieldView[(k_FIELD_VIEW_ROW_SIZE * viewRow) + viewCol]);
                 }
             }
         } else {
