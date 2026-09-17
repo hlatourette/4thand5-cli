@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     (void)std::signal(SIGINT, signalHandler);
 
     // Initialize configuration
-    std::array<char, k_FIELD_VIEW_SIZE> configuration{};
+    std::array<char, 847uz> configuration{};
     configuration.fill(0x20);
     std::ifstream configFile("/usr/share/4thand5");
     if (configFile.is_open()) {
@@ -46,9 +46,9 @@ int main(int argc, char *argv[])
     gameDataLog = getGameData(0);
 
     // Initialize data views
-    std::array<char, k_FIELD_VIEW_SIZE> fieldView{};
-    std::array<char, k_INPUT_VIEW_SIZE> inputView{};
-    (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView));
+    View fieldView = createDefaultFieldView();
+    View inputView = createDefaultInputView();
+    (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView.buffer));
 
     // Initialize rendering [ncurses]
     (void)initscr();
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         // TODO: logic + data updates: cmd
 
         // Update view buffer
-        // TODO: view buffer updates
+        // TODO: view updates
 
         // Check window sizing
         (void)getbegyx(stdscr, minY, minX);
@@ -69,19 +69,15 @@ int main(int argc, char *argv[])
 
         // Buffer rendering
         const bool fits =
-            (maxY >= [](auto... args) { return (... + args); }(
-                k_FIELD_VIEW_MIN_ROWS,
-                k_INPUT_VIEW_MIN_ROWS))
-            && 
-            (maxX >= [](auto... args) { return (... + args); }(
-                k_FIELD_VIEW_MIN_COLUMNS,
-                k_INPUT_VIEW_MIN_COLUMNS));
+            (maxY >= [](auto... args) { return (... + args); }(fieldView.nRows, inputView.nRows)) &&
+            (maxX >= std::max({fieldView.nCols, inputView.nCols}));
         if (fits) {
+            // TODO: iterate over view objects
             (void)wmove(stdscr, minY, minX);
-            for (std::size_t fieldViewRow = 0; fieldViewRow < fieldView.size() / k_FIELD_VIEW_ROW_SIZE; fieldViewRow++) {
-                for (std::size_t fieldViewCol = 0; fieldViewCol < k_FIELD_VIEW_ROW_SIZE; fieldViewCol++) {
-                    (void)wmove(stdscr, fieldViewRow, fieldViewCol);
-                    (void)waddch(stdscr, fieldView[(k_FIELD_VIEW_ROW_SIZE * fieldViewRow) + fieldViewCol]);
+            for (std::size_t viewRow = 0; viewRow < fieldView.nRows; viewRow++) {
+                for (std::size_t viewCol = 0; viewCol < fieldView.nCols; viewCol++) {
+                    (void)wmove(stdscr, viewRow, viewCol);
+                    (void)waddch(stdscr, fieldView.buffer[(fieldView.nCols * viewRow) + viewCol]);
                 }
             }
         } else {
