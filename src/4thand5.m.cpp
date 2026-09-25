@@ -3,10 +3,12 @@
 #include <csignal>
 #include <cstddef>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <ncurses.h>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "feed.h"
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
     View fieldView = createDefaultFieldView();
     View inputView = createDefaultInputView();
     (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView.buffer));
+    std::tuple views{ std::cref(fieldView), std::cref(inputView) };
 
     // Initialize rendering [ncurses]
     (void)initscr();
@@ -68,20 +71,31 @@ int main(int argc, char *argv[])
         (void)getmaxyx(stdscr, maxY, maxX);
 
         // Buffer rendering
+        (void)wmove(stdscr, minY, minX);
         const bool fits =
-            (maxY >= [](auto... args) { return (... + args); }(fieldView.nRows, inputView.nRows)) &&
-            (maxX >= std::max({fieldView.nCols, inputView.nCols}));
+            (maxY >= std::apply([](auto... args) { return (... + args.get().nRows) + 1uz; }, views)) &&
+            (maxX >= std::apply([](auto... args) { return std::max({args.get().nCols...}); }, views)); //TODO: pass cmd.size() for maxX check
         if (fits) {
-            // TODO: iterate over view objects
-            (void)wmove(stdscr, minY, minX);
-            for (std::size_t viewRow = 0; viewRow < fieldView.nRows; viewRow++) {
-                for (std::size_t viewCol = 0; viewCol < fieldView.nCols; viewCol++) {
-                    (void)wmove(stdscr, viewRow, viewCol);
-                    (void)waddch(stdscr, fieldView.buffer[(fieldView.nCols * viewRow) + viewCol]);
-                }
-            }
+            unsigned int startX = minX, startY = minY;
+            (void)wmove(stdscr, startY, startX);
+            std::apply([&startX, &startY](auto&&... args) {
+                auto bufferView = [&](auto&& view) {
+                    for (std::size_t viewRow = 0; viewRow < view.get().nRows; viewRow++) {
+                        for (std::size_t viewCol = 0; viewCol < view.get().nCols; viewCol++) {
+                            (void)wmove(stdscr, viewRow + startY, viewCol + startX);
+                            (void)waddch(stdscr, view.get().buffer[(view.get().nCols * viewRow) + viewCol]);
+                        }
+                    }
+
+                    startY += view.get().nRows;
+                };
+
+                (bufferView(args), ...);
+            }, views);
         } else {
+            (void)wmove(stdscr, minY, minX);
             (void)werase(stdscr);
+            (void)wprintw(stdscr, "Terminal too small to render...");
         }
 
         (void)wmove(stdscr, maxY - 1, minX);
