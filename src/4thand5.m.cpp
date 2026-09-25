@@ -48,10 +48,10 @@ int main(int argc, char *argv[])
     gameDataLog = getGameData(0);
 
     // Initialize data views
+    View scoreView = createDefaultScoreView();
     View fieldView = createDefaultFieldView();
-    View inputView = createDefaultInputView();
     (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView.buffer));
-    std::tuple views{ std::cref(fieldView), std::cref(inputView) };
+    std::tuple views{ std::cref(scoreView), std::cref(fieldView) };
 
     // Initialize rendering [ncurses]
     (void)initscr();
