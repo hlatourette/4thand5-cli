@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
                     startY += view.get().nRows;
                 };
 
-                (bufferView(args), ...);
+                ((void)bufferView(args), ...);
             }, views);
         } else {
             (void)wmove(stdscr, minY, minX);
