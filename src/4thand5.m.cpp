@@ -6,10 +6,11 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
-#include <ncurses.h>
 #include <string>
 #include <tuple>
 #include <vector>
+
+#include <ncurses.h>
 
 #include "feed.h"
 #include "game_data.h"

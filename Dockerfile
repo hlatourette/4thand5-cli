@@ -2,6 +2,7 @@ FROM gcc:12.3 AS build
 RUN apt-get update && apt-get install -y \
     catch2 \
     cmake \ 
+    libcurl4-openssl-dev \
     libncurses5-dev \
     libncursesw5-dev && \
     apt-get autoremove && \
@@ -24,6 +25,7 @@ ENTRYPOINT [ "/usr/local/bin/4thand5.i.t" ]
 
 FROM ubuntu:latest AS run
 RUN apt-get update && apt-get install -y \
+    libcurl4 \
     libncurses6 && \
     apt-get autoremove && \
     apt-get -y clean && \
