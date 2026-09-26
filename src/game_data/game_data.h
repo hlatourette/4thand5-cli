@@ -2,6 +2,7 @@
 #define FOURTHANDFIVE_GAME_DATA_H
 
 #include <chrono>
+#include <string>
 
 namespace fourthandfive {
 
@@ -18,6 +19,7 @@ struct GameData {
     unsigned int yardLine{0};
     unsigned int period{0};
     std::chrono::seconds clock{900};
+    std::string description{};
 };
 
 } // close namespace fourthandfive

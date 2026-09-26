@@ -7,6 +7,7 @@ target_link_libraries(${LIBRARY_NAME}
         game_data # local
     INTERFACE
     PRIVATE
+        curl
 )
 
 target_sources(${LIBRARY_NAME}

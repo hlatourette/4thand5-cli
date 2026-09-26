@@ -6,10 +6,11 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
-#include <ncurses.h>
 #include <string>
 #include <tuple>
 #include <vector>
+
+#include <ncurses.h>
 
 #include "feed.h"
 #include "game_data.h"
@@ -90,7 +91,7 @@ int main(int argc, char *argv[])
                     startY += view.get().nRows;
                 };
 
-                (bufferView(args), ...);
+                ((void)bufferView(args), ...);
             }, views);
         } else {
             (void)wmove(stdscr, minY, minX);
