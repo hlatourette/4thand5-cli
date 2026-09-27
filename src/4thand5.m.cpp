@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
     std::array<char, 1815uz> configuration{};
     configuration.fill(0x20);
     std::ifstream configFile("/usr/share/4thand5");
-    auto fileRange = std::ranges::subrange(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>());
     if (configFile.is_open()) {
+        auto fileRange = std::ranges::subrange(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>());
         (void)std::ranges::copy(std::views::take(fileRange, configuration.size()), std::begin(configuration));
     }
 
