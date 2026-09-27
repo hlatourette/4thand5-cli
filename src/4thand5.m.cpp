@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
+#include <ranges>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -34,11 +35,12 @@ int main(int argc, char *argv[])
     (void)std::signal(SIGINT, signalHandler);
 
     // Initialize configuration
-    std::array<char, 847uz> configuration{};
+    std::array<char, 1815uz> configuration{};
     configuration.fill(0x20);
     std::ifstream configFile("/usr/share/4thand5");
+    auto fileRange = std::ranges::subrange(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>());
     if (configFile.is_open()) {
-        (void)std::copy(std::istreambuf_iterator<char>(configFile), std::istreambuf_iterator<char>(), std::begin(configuration));
+        (void)std::ranges::copy(std::views::take(fileRange, configuration.size()), std::begin(configuration));
     }
 
     configFile.close();
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
     // Initialize data views
     View scoreView = createDefaultScoreView();
     View fieldView = createDefaultFieldView();
-    (void)std::copy(std::begin(configuration), std::end(configuration), std::begin(fieldView.buffer));
+    (void)std::ranges::copy(std::views::take(configuration, fieldView.buffer.size()), std::begin(fieldView.buffer));
     std::tuple views{ std::cref(scoreView), std::cref(fieldView) };
 
     // Initialize rendering [ncurses]
