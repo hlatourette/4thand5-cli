@@ -1,6 +1,6 @@
 #include "view.h"
 
-namespace {
+namespace fourthandfive {
 
 } // close namespace fourthandfive
 

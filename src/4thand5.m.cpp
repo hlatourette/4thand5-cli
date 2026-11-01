@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     configFile.close();
 
     // Initialize data
-    std::vector<fourthandfive::GameData> gameDataLog{};
+    std::vector<GameData> gameDataLog{};
     std::array<char, 5uz> cmd{};
     gameDataLog = getGameData(0);
 
