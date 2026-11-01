@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     libncurses6 && \
     apt-get autoremove && \
     apt-get -y clean && \
-    rm -rf /car/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build /usr/local/src/4thand5-cli/build/4thand5-cli-Linux.deb /usr/local/bin
 WORKDIR /usr/local/bin
 RUN dpkg -i 4thand5-cli-Linux.deb
